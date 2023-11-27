@@ -1,0 +1,51 @@
+import pygame
+import Start
+import Game
+
+#create display window
+SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 1200
+
+    
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption('Button Demo')
+
+#load button images
+start_img = pygame.image.load('start_btn.png').convert_alpha()
+exit_img = pygame.image.load('exit_btn.png').convert_alpha()
+
+#create button instances
+start_button = Start.Button(450, 200, start_img, 1.2)
+exit_button = Start.Button(475, 400, exit_img, 1.2)
+play = Game.Run(screen,5)
+
+#game loop
+run = True
+click = False
+while run:
+
+	screen.fill((202, 228, 241))
+	start_button.draw(screen)
+	exit_button.draw(screen)
+	pygame.display.update()
+
+	#event handler
+	for event in pygame.event.get():
+		#quit game
+		if event.type == pygame.QUIT:
+			run = False
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			pos = pygame.mouse.get_pos()
+			if start_button.rect.collidepoint(pos):
+				if pygame.mouse.get_pressed()[0] == 1 and click == False:
+					click = True
+					play.screen.fill((255,255,255))
+					play.draw_grid(5,5)
+					pygame.display.update()
+					play.main()
+				elif pygame.mouse.get_pressed()[0] == 0:
+					click = False			
+	pygame.display.update()
+
+pygame.quit()
