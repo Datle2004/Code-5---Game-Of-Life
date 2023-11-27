@@ -10,9 +10,10 @@ class Run:
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
         self.COUNT = 0
+        self.menu = []
 
     # Initialize Pygame
-    def input_screen(self,input_text,input_rect_x,input_rect_y,check):
+    def input_screen(self,input_text,input_rect_x,input_rect_y,check,input_active = False):
         write = ""
         # Set up fonts
         font = pygame.font.SysFont('Arial', 25)
@@ -20,7 +21,7 @@ class Run:
 
         # Set up text input
         input_rect = pygame.Rect(input_rect_x, input_rect_y, 350, 40)
-        input_active = False
+        self.menu.append(input_rect)
 
         clock = pygame.time.Clock()
 
@@ -31,7 +32,7 @@ class Run:
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if input_rect.collidepoint(event.pos):
-                        input_active = not input_active
+                        input_active = True
                     else:
                         input_active = False
                 elif event.type == pygame.KEYDOWN:
@@ -43,17 +44,17 @@ class Run:
                                 return [int(i) for i in write.split()]
                         elif event.key == pygame.K_BACKSPACE:
                             write = write[0 : -1]
-                            input_text = input_text[0 : -1]
+                            input_text = input_text[0:-1]
                         else:
                             write += event.unicode
                             input_text += event.unicode
-                 
+            pygame.draw.rect(self.screen,self.WHITE,input_rect)
             # Render the input box and text
             pygame.draw.rect(self.screen, (0, 0, 0), input_rect, 2)
             text_surface = font.render(input_text, True, text_color)
             self.screen.blit(text_surface, (input_rect.x+5, input_rect.y+5))
             
-            pygame.display.flip()
+            pygame.display.update()
             clock.tick(30)
     # Function to draw the grid
     def draw_grid(self, rows, cols):
@@ -116,7 +117,7 @@ class Run:
 
     # Main function
     def main(self):
-        rows = self.input_screen("Rows: ",700,50,True)
+        rows = self.input_screen("Rows: ",700,500,True)
         cols = self.input_screen("Cols: ",700,100,True)
         self.cell_size = 600 // max(rows,cols)
         live_cell = self.input_screen("Live Cell: ",700,150,False)
@@ -138,9 +139,13 @@ class Run:
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if not button_rect.collidepoint(event.pos) : 
-                        self.update_grid(grid, pygame.mouse.get_pos())
-                        pause = True
+                    if not button_rect.collidepoint(event.pos): 
+                        if self.menu[0].collidepoint(event.pos):
+                            rows = self.input_screen("Rows: ",700,50,True,True)
+                            self.cell_size = 600 // max(rows,cols)
+                        else:
+                            self.update_grid(grid, pygame.mouse.get_pos())
+                            pause = True
                     else:
                         pause = not pause
                 elif event.type == pygame.KEYDOWN:
