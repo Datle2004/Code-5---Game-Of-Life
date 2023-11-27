@@ -1,0 +1,172 @@
+import pygame
+import sys
+class Run:    
+    def __init__(self,screen,size):
+        pygame.font.init()
+        pygame.init()
+        self.screen = screen
+        self.cell_size = 600 // size
+        self.GREEN = (0,255,0)
+        self.WHITE = (255, 255, 255)
+        self.BLACK = (0, 0, 0)
+        self.COUNT = 0
+
+    # Initialize Pygame
+    def input_screen(self,input_text,input_rect_x,input_rect_y,check):
+        write = ""
+        # Set up fonts
+        font = pygame.font.SysFont('Arial', 25)
+        text_color = pygame.Color('black')
+
+        # Set up text input
+        input_rect = pygame.Rect(input_rect_x, input_rect_y, 350, 40)
+        input_active = False
+
+        clock = pygame.time.Clock()
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if input_rect.collidepoint(event.pos):
+                        input_active = not input_active
+                    else:
+                        input_active = False
+                elif event.type == pygame.KEYDOWN:
+                    if input_active:
+                        if event.key == pygame.K_RETURN:
+                            if check:
+                                return int(write)
+                            else:
+                                return [int(i) for i in write.split()]
+                        elif event.key == pygame.K_BACKSPACE:
+                            write = write[0 : -1]
+                            input_text = input_text[0 : -1]
+                        else:
+                            write += event.unicode
+                            input_text += event.unicode
+                 
+            # Render the input box and text
+            pygame.draw.rect(self.screen, (0, 0, 0), input_rect, 2)
+            text_surface = font.render(input_text, True, text_color)
+            self.screen.blit(text_surface, (input_rect.x+5, input_rect.y+5))
+            
+            pygame.display.flip()
+            clock.tick(30)
+    # Function to draw the grid
+    def draw_grid(self, rows, cols):
+        WIDTH = self.cell_size * cols
+        HEIGHT = self.cell_size * rows
+        for row in range(rows):
+            for col in range(cols):
+                pygame.draw.rect(self.screen, self.WHITE, (col * self.cell_size, row * self.cell_size, self.cell_size, self.cell_size))
+        for x in range(0,WIDTH+self.cell_size,self.cell_size):
+            line_start = (x,0)
+            line_end = (x,HEIGHT)
+            pygame.draw.line(self.screen,self.GREEN,line_start,line_end,2)
+        for y in range(0,HEIGHT+self.cell_size,self.cell_size):
+            line_start = (0,y)
+            line_end = (WIDTH,y)
+            pygame.draw.line(self.screen,self.GREEN,line_start,line_end,2)
+
+    # Function to update the grid based on user clicks
+    def update_grid(self,grid, mouse_pos):
+        col = mouse_pos[0] // self.cell_size
+        row = mouse_pos[1] // self.cell_size
+        grid[row][col] = 1 - grid[row][col]
+
+    # Function to calculate the next generation of cells
+    def next_generation(self,curr_gen,live_cell,dead_cell):
+        new_gen = [[0] * len(curr_gen[0]) for _ in range(len(curr_gen))]
+        
+        for i in range(len(curr_gen)):
+            for j in range(len(curr_gen[0])):
+                neighbors = sum(curr_gen[i + x][j + y] for x in [-1, 0, 1] for y in [-1, 0, 1]
+                                if 0 <= i + x < len(curr_gen) and 0 <= j + y < len(curr_gen[0]) and (x != 0 or y != 0))
+                
+                if curr_gen[i][j] == 1:
+                    new_gen[i][j] = 1 if neighbors in live_cell else 0
+                else:
+                    new_gen[i][j] = 1 if neighbors in dead_cell else 0
+        
+        return new_gen
+
+    # Function to draw the cells on the grid
+    def draw_cells(self, grid):
+        for row in range(len(grid)):
+            for col in range(len(grid[0])):
+                if grid[row][col] == 1:
+                    pygame.draw.rect(self.screen, self.BLACK, (col * self.cell_size + 2, row * self.cell_size + 2, self.cell_size - 2, self.cell_size - 2))
+    def draw_pause_button(self, paused,start,button_rect):
+        pygame.draw.rect(self.screen, (255, 0, 0), button_rect)
+        font = pygame.font.SysFont('Arial', 24)
+        text = font.render("Pause" if not paused or not start else "Continue", True, self.BLACK)
+        self.screen.blit(text, (button_rect.x + 13, button_rect.y + 10))
+    def draw_generation(self,rows,check):
+        if check:
+            self.COUNT +=1
+       
+        font = pygame.font.SysFont('Arial',24)
+        text = font.render(f"Generation: {self.COUNT}",True,self.BLACK)
+        text_width, text_height = text.get_size()
+        pygame.draw.rect(self.screen,(0,0,255),(50,self.cell_size * rows + 50,text_width + 20,50))
+        self.screen.blit(text,(50 + 10,self.cell_size * rows + 50 + 10))
+
+    # Main function
+    def main(self):
+        rows = self.input_screen("Rows: ",700,50,True)
+        cols = self.input_screen("Cols: ",700,100,True)
+        self.cell_size = 600 // max(rows,cols)
+        live_cell = self.input_screen("Live Cell: ",700,150,False)
+        dead_cell = self.input_screen("Dead Cell: ",700,200,False)
+        speed = self.input_screen("Speed From 1 to 20: ",700,250 ,True)
+
+        button_rect = pygame.Rect(250,self.cell_size * rows + 50,100,50)
+       
+        # Create the grid
+        grid = [[0] * cols for _ in range(rows)]
+        # Main loop
+        running = True
+        pause = False
+        start = False
+        check = True
+        clock = pygame.time.Clock()
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if not button_rect.collidepoint(event.pos) : 
+                        self.update_grid(grid, pygame.mouse.get_pos())
+                        pause = True
+                    else:
+                        pause = not pause
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        grid = self.next_generation(grid,live_cell,dead_cell)
+                        start = True
+                        pause = False
+
+
+            # Draw the grid and cells
+            self.draw_grid(rows, cols)
+            self.draw_cells(grid)
+            
+            self.draw_pause_button(pause,start,button_rect)
+            if not pause and start:
+                grid = self.next_generation(grid,live_cell,dead_cell)
+                self.draw_generation(rows,check)
+            if grid == self.next_generation(grid,live_cell,dead_cell):
+                check = False
+            else:
+                check = True
+
+            # Update the display
+            pygame.display.flip()
+            clock.tick(speed)
+
+        # Quit Pygame
+        pygame.quit()
+        sys.exit()
