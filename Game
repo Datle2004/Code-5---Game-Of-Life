@@ -170,12 +170,16 @@ class Run:
                         elif self.menu[4].collidepoint(event.pos):
                             speed = self.input_screen("Speed: ",700,250,True,True)
                             self.COUNT = 0
-        
+                        elif reset_button.collidepoint(event.pos):
+                            grid = [[0] * cols for _ in range(rows)]
+                            self.COUNT = 0
+                            self.draw_generation(rows,check)
                         else:
                             self.update_grid(grid, pygame.mouse.get_pos())
                             pause = True
                             self.COUNT = 0
                             self.draw_generation(rows,check = False)
+                    
                     else:
                         pause = not pause
                 elif event.type == pygame.KEYDOWN:
