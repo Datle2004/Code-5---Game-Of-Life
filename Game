@@ -1,5 +1,6 @@
 import pygame
 import sys
+
 class Run:    
     def __init__(self,screen,size):
         pygame.font.init()
@@ -105,6 +106,13 @@ class Run:
         font = pygame.font.SysFont('Arial', 24)
         text = font.render("Pause" if not paused or not start else "Continue", True, self.BLACK)
         self.screen.blit(text, (button_rect.x + 13, button_rect.y + 10))
+    
+    def draw_reset_button(self, reset_button):
+        pygame.draw.rect(self.screen, (0, 0, 255), reset_button)
+        font = pygame.font.SysFont('Arial', 24)
+        text = font.render('Reset', True, self.BLACK)
+        self.screen.blit(text, (reset_button.x + 13, reset_button.y + 10))
+
     def draw_generation(self,rows,check):
         if check:
             self.COUNT +=1
@@ -126,7 +134,7 @@ class Run:
         speed = self.input_screen("Speed From 1 to 20: ",700,250 ,True)
 
         button_rect = pygame.Rect(250,self.cell_size * rows + 50,100,50)
-       
+        reset_button = pygame.Rect(415,self.cell_size * rows + 50,100,50)
         # Create the grid
         grid = [[0] * cols for _ in range(rows)]
         # Main loop
@@ -182,7 +190,7 @@ class Run:
             self.draw_cells(grid)
             
             self.draw_pause_button(pause,start,button_rect)
-            
+            self.draw_reset_button(reset_button)
             if not pause and start:
                 self.draw_generation(rows,check)
                 grid = self.next_generation(grid,live_cell,dead_cell)
