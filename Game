@@ -1,5 +1,6 @@
 import pygame
 import sys
+import Input_Screen
 class Run:    
     def __init__(self,screen,size):
         pygame.font.init()
@@ -108,6 +109,7 @@ class Run:
     def draw_generation(self,rows,check):
         if check:
             self.COUNT +=1
+        print(self.COUNT)
        
         font = pygame.font.SysFont('Arial',24)
         text = font.render(f"Generation: {self.COUNT}",True,self.BLACK)
@@ -117,7 +119,7 @@ class Run:
 
     # Main function
     def main(self):
-        rows = self.input_screen("Rows: ",700,500,True)
+        rows = self.input_screen("Rows: ",700,50,True)
         cols = self.input_screen("Cols: ",700,100,True)
         self.cell_size = 600 // max(rows,cols)
         live_cell = self.input_screen("Live Cell: ",700,150,False)
@@ -132,7 +134,7 @@ class Run:
         running = True
         pause = False
         start = False
-        check = True
+        check = False
         clock = pygame.time.Clock()
         while running:
             for event in pygame.event.get():
@@ -143,9 +145,30 @@ class Run:
                         if self.menu[0].collidepoint(event.pos):
                             rows = self.input_screen("Rows: ",700,50,True,True)
                             self.cell_size = 600 // max(rows,cols)
+                            pygame.draw.rect(self.screen,self.WHITE,(0,0,602,602))
+                            grid = [[0] * cols for _ in range(rows)]
+                            self.COUNT = 0
+                        elif self.menu[1].collidepoint(event.pos):
+                            cols = self.input_screen("Cols: ",700,100,True,True)
+                            self.cell_size = 600 // max(rows,cols)
+                            pygame.draw.rect(self.screen,self.WHITE,(0,0,602,602))
+                            grid = [[0] * cols for _ in range(rows)]
+                            self.COUNT =0 
+                        elif self.menu[2].collidepoint(event.pos):
+                            live_cell = self.input_screen("Live Cell: ",700,150,False,True)
+                            self.COUNT = 0
+                        elif self.menu[3].collidepoint(event.pos):
+                            dead_cell = self.input_screen("Dead Cell: ",700,200,False,True)
+                            self.COUNT = 0
+                        elif self.menu[4].collidepoint(event.pos):
+                            speed = self.input_screen("Speed: ",700,250,True,True)
+                            self.COUNT = 0
+        
                         else:
                             self.update_grid(grid, pygame.mouse.get_pos())
                             pause = True
+                            self.COUNT = 0
+                            self.draw_generation(rows,check = False)
                     else:
                         pause = not pause
                 elif event.type == pygame.KEYDOWN:
@@ -160,16 +183,17 @@ class Run:
             self.draw_cells(grid)
             
             self.draw_pause_button(pause,start,button_rect)
+            
             if not pause and start:
-                grid = self.next_generation(grid,live_cell,dead_cell)
                 self.draw_generation(rows,check)
+                grid = self.next_generation(grid,live_cell,dead_cell)
             if grid == self.next_generation(grid,live_cell,dead_cell):
                 check = False
             else:
                 check = True
 
             # Update the display
-            pygame.display.flip()
+            pygame.display.update()
             clock.tick(speed)
 
         # Quit Pygame
