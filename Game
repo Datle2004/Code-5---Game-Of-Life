@@ -1,6 +1,5 @@
 import pygame
 import sys
-import Input_Screen
 class Run:    
     def __init__(self,screen,size):
         pygame.font.init()
