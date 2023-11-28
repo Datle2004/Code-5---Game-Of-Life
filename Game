@@ -2,18 +2,23 @@ import pygame
 import sys
 
 class Run:    
-    def __init__(self,screen,size):
+    def __init__(self,screen):
         pygame.font.init()
         pygame.init()
         self.screen = screen
-        self.cell_size = 600 // size
+        self.cell_size = 300
         self.GREEN = (0,255,0)
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
         self.COUNT = 0
-        self.menu = []
 
     # Initialize Pygame
+    def draw_input(self,text, i):
+        pygame.draw.rect(self.screen, (0, 0, 0), (700, i, 350, 40), 2) 
+        font = pygame.font.SysFont('Arial', 25)
+        text_surface = font.render(text, True, self.BLACK)
+        self.screen.blit(text_surface, (700 + 5, i + 5))
+        return pygame.Rect(700, i, 350, 40)
     def input_screen(self,input_text,input_rect_x,input_rect_y,check,input_active = False):
         write = ""
         # Set up fonts
@@ -22,7 +27,6 @@ class Run:
 
         # Set up text input
         input_rect = pygame.Rect(input_rect_x, input_rect_y, 350, 40)
-        self.menu.append(input_rect)
 
         clock = pygame.time.Clock()
 
@@ -105,38 +109,44 @@ class Run:
         pygame.draw.rect(self.screen, (255, 0, 0), button_rect)
         font = pygame.font.SysFont('Arial', 24)
         text = font.render("Pause" if not paused or not start else "Continue", True, self.BLACK)
-        self.screen.blit(text, (button_rect.x + 13, button_rect.y + 10))
+        text_w = text.get_width()
+        self.screen.blit(text, (250 + (100 - text_w)//2, button_rect.y + 10))
     
     def draw_reset_button(self, reset_button):
         pygame.draw.rect(self.screen, (0, 0, 255), reset_button)
         font = pygame.font.SysFont('Arial', 24)
         text = font.render('Reset', True, self.BLACK)
-        self.screen.blit(text, (reset_button.x + 13, reset_button.y + 10))
+        text_w = text.get_width()
+        self.screen.blit(text, ((100-text_w)//2 + 415, reset_button.y + 10))
 
-    def draw_generation(self,rows,check):
+    def draw_generation(self,check):
         if check:
             self.COUNT +=1
         print(self.COUNT)
        
         font = pygame.font.SysFont('Arial',24)
         text = font.render(f"Generation: {self.COUNT}",True,self.BLACK)
-        text_width, text_height = text.get_size()
-        pygame.draw.rect(self.screen,(0,0,255),(50,self.cell_size * rows + 50,text_width + 20,50))
-        self.screen.blit(text,(50 + 10,self.cell_size * rows + 50 + 10))
+        text_w = text.get_width()
+        pygame.draw.rect(self.screen,(0,0,255),(50,700,165,50))
+        self.screen.blit(text,(50 + (165 - text_w)//2,710))
 
     # Main function
     def main(self):
-        rows = self.input_screen("Rows: ",700,50,True)
-        cols = self.input_screen("Cols: ",700,100,True)
-        self.cell_size = 600 // max(rows,cols)
-        live_cell = self.input_screen("Live Cell: ",700,150,False)
-        dead_cell = self.input_screen("Dead Cell: ",700,200,False)
-        speed = self.input_screen("Speed From 1 to 20: ",700,250 ,True)
+        rows_pos = self.draw_input("Rows: ",50)
+        cols_pos = self.draw_input("Cols: ",100)
+        live_cell_pos = self.draw_input("Live Cell: ",150)
+        dead_cell_pos = self.draw_input("Dead Cell: ",200)
+        speed_pos = self.draw_input("Speed: ",250)
 
-        button_rect = pygame.Rect(250,self.cell_size * rows + 50,100,50)
-        reset_button = pygame.Rect(415,self.cell_size * rows + 50,100,50)
+        button_rect = pygame.Rect(250,700,100,50)
+        reset_button = pygame.Rect(415,700,100,50)
         # Create the grid
+        rows,cols = (2,2)
         grid = [[0] * cols for _ in range(rows)]
+        live_cell = [2,3]
+        dead_cell = [3]
+        speed = 20
+
         # Main loop
         running = True
         pause = False
@@ -149,42 +159,43 @@ class Run:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if not button_rect.collidepoint(event.pos): 
-                        if self.menu[0].collidepoint(event.pos):
+                        if rows_pos.collidepoint(event.pos):
                             rows = self.input_screen("Rows: ",700,50,True,True)
                             self.cell_size = 600 // max(rows,cols)
                             pygame.draw.rect(self.screen,self.WHITE,(0,0,602,602))
                             grid = [[0] * cols for _ in range(rows)]
                             self.COUNT = 0
-                        elif self.menu[1].collidepoint(event.pos):
+                        elif cols_pos.collidepoint(event.pos):
                             cols = self.input_screen("Cols: ",700,100,True,True)
                             self.cell_size = 600 // max(rows,cols)
                             pygame.draw.rect(self.screen,self.WHITE,(0,0,602,602))
                             grid = [[0] * cols for _ in range(rows)]
                             self.COUNT =0 
-                        elif self.menu[2].collidepoint(event.pos):
+                        elif live_cell_pos.collidepoint(event.pos):
                             live_cell = self.input_screen("Live Cell: ",700,150,False,True)
                             self.COUNT = 0
-                        elif self.menu[3].collidepoint(event.pos):
+                        elif dead_cell_pos.collidepoint(event.pos):
                             dead_cell = self.input_screen("Dead Cell: ",700,200,False,True)
                             self.COUNT = 0
-                        elif self.menu[4].collidepoint(event.pos):
+                        elif speed_pos.collidepoint(event.pos):
                             speed = self.input_screen("Speed: ",700,250,True,True)
                             self.COUNT = 0
                         elif reset_button.collidepoint(event.pos):
                             grid = [[0] * cols for _ in range(rows)]
                             self.COUNT = 0
-                            self.draw_generation(rows,check)
-                        else:
+                            self.draw_generation(False)
+                        elif pygame.Rect((0,0,cols*self.cell_size,rows*self.cell_size)).collidepoint(event.pos):
                             self.update_grid(grid, pygame.mouse.get_pos())
                             pause = True
+                            start = False
                             self.COUNT = 0
-                            self.draw_generation(rows,check = False)
-                    
+                            self.draw_generation(False)
+                        else:
+                            pass
                     else:
                         pause = not pause
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        grid = self.next_generation(grid,live_cell,dead_cell)
                         start = True
                         pause = False
 
@@ -196,7 +207,7 @@ class Run:
             self.draw_pause_button(pause,start,button_rect)
             self.draw_reset_button(reset_button)
             if not pause and start:
-                self.draw_generation(rows,check)
+                self.draw_generation(check)
                 grid = self.next_generation(grid,live_cell,dead_cell)
             if grid == self.next_generation(grid,live_cell,dead_cell):
                 check = False
