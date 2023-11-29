@@ -2,14 +2,21 @@ import pygame
 
 #button class
 class Button():
-	def __init__(self, x, y, image, scale):
-		width = image.get_width()
-		height = image.get_height()
-		self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
-		self.rect = self.image.get_rect()
-		self.rect.topleft = (x, y)
-		self.clicked = False
-
+	def __init__(self,text, x, y,distance):
+		self.content  = text
+		self.x = x 
+		self.y = y
+		self.maroon = (128,0,0)
+		self.white = (255,255,255)
+		self.orange = (204,102,0)
+		self.distance = distance
 	def draw(self, surface):
 		#draw button on screen
-		surface.blit(self.image, (self.rect.x, self.rect.y))
+		pygame.draw.rect(surface,self.maroon,(self.x,self.y,300,100))
+		pygame.draw.rect(surface,self.white,(self.x+self.distance,self.y+self.distance,300-2*self.distance,100-2*self.distance))
+		pygame.draw.rect(surface,self.orange,(self.x + 2*self.distance,self.y + 2*self.distance,300 - 4*self.distance,100-4*self.distance))
+		surface.blit(self.content,(self.x + (300 - self.content.get_width())//2,self.y+3*self.distance))
+	def get_pos(self):
+		return pygame.Rect(self.x,self.y,300,100)
+
+
