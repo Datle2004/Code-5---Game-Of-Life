@@ -5,55 +5,55 @@ pygame.init()
 #create display window
 SCREEN_HEIGHT = 800
 SCREEN_WIDTH = 1200
+def main():
+	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+	pygame.display.set_caption("Conway's Game Of Life")
+	font_title = pygame.font.Font('freesansbold.ttf', 100)
+	title = font_title.render("Game of Life",True,(204,102,0))
+	#create button instances
+	font_text = pygame.font.Font('freesansbold.ttf',50)
+	start_text = font_text.render("Start",True,'white')
+	exit_text = font_text.render("Exit",True,'white')
+	example_text = font_text.render("Example",True,'white')
+	start_button = Start.Button(start_text,450,250,10)
+	exit_button = Start.Button(exit_text,450,450,10)
+	example_button = Start.Button(example_text,450,650,10)
+	#game loop
+	run = True
+	click = False
+	play = Game.Run(screen)
+	while run:
 
-    
+		screen.fill((202, 228, 241))
+		screen.blit(title,((1200 - title.get_width())//2,100))
+		start_button.draw(screen)
+		exit_button.draw(screen)
+		example_button.draw(screen)
+		pygame.display.update()
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Conway's Game Of Life")
-font_title = pygame.font.Font('freesansbold.ttf', 100)
-title = font_title.render("Game of Life",True,(204,102,0))
-#create button instances
-font_text = pygame.font.Font('freesansbold.ttf',50)
-start_text = font_text.render("Start",True,'white')
-exit_text = font_text.render("Exit",True,'white')
-example_text = font_text.render("Example",True,'white')
-start_button = Start.Button(start_text,450,250,10)
-exit_button = Start.Button(exit_text,450,450,10)
-example_button = Start.Button(example_text,450,650,10)
-#game loop
-run = True
-click = False
-play = Game.Run(screen)
-while run:
-
-	screen.fill((202, 228, 241))
-	screen.blit(title,((1200 - title.get_width())//2,100))
-	start_button.draw(screen)
-	exit_button.draw(screen)
-	example_button.draw(screen)
-	pygame.display.update()
-
-	#event handler
-	for event in pygame.event.get():
-		#quit game
-		if event.type == pygame.QUIT:
-			run = False
-		elif event.type == pygame.MOUSEBUTTONDOWN:
-				pos = pygame.mouse.get_pos()
-				if start_button.get_pos().collidepoint(pos):
-					screen.fill((202, 228, 241))
-					pygame.display.update()
-					play.main()
-				elif exit_button.get_pos().collidepoint(pos):
-					run = False
-				elif example_button.get_pos().collidepoint(pos):
-					pass
-				else:
-					pass
-		else:
-			pass
+		#event handler
+		for event in pygame.event.get():
+			#quit game
+			if event.type == pygame.QUIT:
+				run = False
+			elif event.type == pygame.MOUSEBUTTONDOWN:
+					pos = pygame.mouse.get_pos()
+					if start_button.get_pos().collidepoint(pos):
+						screen.fill((202, 228, 241))
+						pygame.display.update()
+						play.main()
+					elif exit_button.get_pos().collidepoint(pos):
+						run = False
+					elif example_button.get_pos().collidepoint(pos):
+						pass
+					else:
+						pass
+			else:
+				pass
+					
 				
-       		
-	pygame.display.update()
+		pygame.display.update()
 
-pygame.quit()
+	pygame.quit()
+if __name__ == "__main__":
+    main()
