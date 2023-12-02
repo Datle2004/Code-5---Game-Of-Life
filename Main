@@ -1,6 +1,8 @@
 import pygame
 import Start
 import Game
+import Example
+
 pygame.init()
 #create display window
 SCREEN_HEIGHT = 800
@@ -20,8 +22,8 @@ def main():
 	example_button = Start.Button(example_text,450,650,10)
 	#game loop
 	run = True
-	click = False
 	play = Game.Run(screen)
+	example = Example.Variant(screen)
 	while run:
 
 		screen.fill((202, 228, 241))
@@ -45,7 +47,10 @@ def main():
 					elif exit_button.get_pos().collidepoint(pos):
 						run = False
 					elif example_button.get_pos().collidepoint(pos):
-						pass
+						screen.fill((202, 228, 241))
+						pygame.display.update()
+						example.main()
+						
 					else:
 						pass
 			else:
@@ -53,7 +58,6 @@ def main():
 					
 				
 		pygame.display.update()
-
 	pygame.quit()
 if __name__ == "__main__":
     main()
