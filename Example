@@ -1,0 +1,74 @@
+import pygame
+import sys
+import Main
+import numpy as np 
+import vd
+
+pygame.init()
+pygame.font.init()
+
+class Variant:
+    def __init__(self, screen):
+        self.screen = screen
+        self.cell_size = 300
+        self.font = pygame.font.Font('freesansbold.ttf', 30)
+    
+    def draw(self, text, i):
+        pygame.draw.rect(self.screen, (192, 192, 192), (i, 300, 150, 50), 0, 5)
+        pygame.draw.rect(self.screen, 'dark grey', (i, 300, 150, 50), 3, 5) 
+        text_surface = self.font.render(text, True, 'white')
+        self.screen.blit(text_surface, (i + 5, 300 + 10))
+        return pygame.Rect(i, 300, 150, 50)
+    
+    def draw_back_button(self, back_button):
+        pygame.draw.rect(self.screen, (192, 192, 192), back_button, 0, 5)
+        pygame.draw.rect(self.screen, 'dark grey', back_button, 3, 5)
+        text = self.font.render('Back', True, 'black')
+        text_w = text.get_width()
+        self.screen.blit(text, ((150-text_w)//2 + back_button.x, back_button.y + 10))
+
+    def main(self):
+        self.screen.fill((202, 228, 241))
+        back_button = pygame.Rect(525,600,150,50)
+        
+        V1_pos = self.draw("Variant 1",75)
+        V2_pos = self.draw('Variant 2', 300) 
+        V3_pos = self.draw('Variant 3', 525)
+        V4_pos = self.draw('Variant 4', 750)
+        V5_pos = self.draw('Variant 5', 975)
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if back_button.collidepoint(event.pos):
+                        Main.main()
+                    elif V1_pos.collidepoint(event.pos):
+                        self.screen.fill((202, 228, 241))
+                        grid = [[0,0,0,0,0],
+                                [0,0,1,1,1],
+                                [0,0,0,0,0],
+                                [0,0,0,0,0],
+                                [1,0,0,0,0]]
+                        a = vd.Happy(grid, self.screen)
+                        a.main()
+                        
+                        
+                    elif V2_pos.collidepoint(event.pos):
+                        pass
+                    elif V3_pos.collidepoint(event.pos):
+                        pass
+                    elif V4_pos.collidepoint(event.pos):
+                        pass
+                    elif V5_pos.collidepoint(event.pos):
+                        pass
+            self.draw_back_button(back_button)
+
+            
+            
+            
+            pygame.display.update()
+        pygame.quit()
+        sys.exit()
