@@ -1,8 +1,9 @@
 import pygame
 import Start
 import Game
+import Advanced
 import Example
-
+import vd
 pygame.init()
 #create display window
 SCREEN_HEIGHT = 800
@@ -11,25 +12,22 @@ def main():
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 	pygame.display.set_caption("Conway's Game Of Life")
 	font_title = pygame.font.Font('freesansbold.ttf', 100)
-	title = font_title.render("Game of Life",True,(204,102,0))
-	#create button instances
+	background = pygame.transform.scale(pygame.image.load('conway.png').convert_alpha(), (SCREEN_WIDTH, SCREEN_HEIGHT))
 	font_text = pygame.font.Font('freesansbold.ttf',50)
 	start_text = font_text.render("Start",True,'white')
-	exit_text = font_text.render("Exit",True,'white')
+	advanced_text = font_text.render("Advanced",True,'white')
 	example_text = font_text.render("Example",True,'white')
-	start_button = Start.Button(start_text,450,250,10)
-	exit_button = Start.Button(exit_text,450,450,10)
-	example_button = Start.Button(example_text,450,650,10)
+	start_button = Start.Button(start_text,450,600,10)
+	advanced_button = Start.Button(advanced_text,100,600,10)
+	example_button = Start.Button(example_text,800,600,10)
 	#game loop
 	run = True
 	play = Game.Run(screen)
-	example = Example.Variant(screen)
 	while run:
 
-		screen.fill((202, 228, 241))
-		screen.blit(title,((1200 - title.get_width())//2,100))
+		screen.blit(background,(0,0))
 		start_button.draw(screen)
-		exit_button.draw(screen)
+		advanced_button.draw(screen)
 		example_button.draw(screen)
 		pygame.display.update()
 
@@ -41,16 +39,15 @@ def main():
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 					pos = pygame.mouse.get_pos()
 					if start_button.get_pos().collidepoint(pos):
-						screen.fill((202, 228, 241))
+						play.screen.fill((202, 228, 241))
 						pygame.display.update()
 						play.main()
-					elif exit_button.get_pos().collidepoint(pos):
-						run = False
+					elif advanced_button.get_pos().collidepoint(pos):
+						metvcl = Advanced.Advanced(screen)
+						metvcl.main()
 					elif example_button.get_pos().collidepoint(pos):
-						screen.fill((202, 228, 241))
-						pygame.display.update()
+						example = Example.Variant(screen)
 						example.main()
-						
 					else:
 						pass
 			else:
@@ -58,6 +55,7 @@ def main():
 					
 				
 		pygame.display.update()
+
 	pygame.quit()
 if __name__ == "__main__":
     main()
