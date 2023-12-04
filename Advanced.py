@@ -24,15 +24,15 @@ class Advanced():
             else:
                 self.d[i] = -1
         self.update_middle_direction()
-
-        middle_point = self.find_middle()
-        
-        if max(middle_point) >= 99 or min(middle_point) <= 1:
-            if abs(x2-x1) > abs(y2-y1):
-                self.d[1] = -self.d[1]
-            else:
-                self.d[0] = -self.d[0] 
-            self.update_middle_direction()
+        if self.d != self.m:
+            middle_point = self.find_middle()
+            
+            if max(middle_point) >= 99 or min(middle_point) <= 1:
+                if abs(x2-x1) > abs(y2-y1):
+                    self.d[1] = -self.d[1]
+                else:
+                    self.d[0] = -self.d[0] 
+                self.update_middle_direction()
         
                     
     def update_middle_direction(self):
@@ -125,7 +125,7 @@ class Advanced():
                         if self.m != self.d:
                             check_middle = True
                             middle = self.find_middle()
-
+                        self.create.grid = [[0] * 100 for i in range(100)]
                         self.create.COUNT = 0        
                         self.update_start_grid(self.start,self.d)
                         start = True
