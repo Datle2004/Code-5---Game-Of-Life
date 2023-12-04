@@ -12,15 +12,14 @@ SCREEN_WIDTH = 1200
 def main():
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 	pygame.display.set_caption("Conway's Game Of Life")
-	font_title = pygame.font.Font('freesansbold.ttf', 100)
 	background = pygame.transform.scale(pygame.image.load('conway.png').convert_alpha(), (SCREEN_WIDTH, SCREEN_HEIGHT))
-	font_text = pygame.font.Font('freesansbold.ttf',50)
+	font_text = pygame.font.Font('PXL3278.ttf',45)
 	start_text = font_text.render("Start",True,'white')
 	advanced_text = font_text.render("Advanced",True,'white')
 	example_text = font_text.render("Example",True,'white')
-	start_button = Start.Button(start_text,450,600,10)
-	advanced_button = Start.Button(advanced_text,100,600,10)
-	example_button = Start.Button(example_text,800,600,10)
+	start_button = Start.Button(start_text,450,530,10)
+	advanced_button = Start.Button(advanced_text,100,530,10)
+	example_button = Start.Button(example_text,800,530,10)
 	#sound
 	pop_sound = pygame.mixer.Sound('pop_sound.mp3')
 	pop_sound.set_volume(0.2)
@@ -28,7 +27,7 @@ def main():
 	music.play(-1)
 	#game loop
 	run = True
-	play = Game.Run(screen)
+	
 	while run:
 
 		screen.blit(background,(0,0))
@@ -46,7 +45,8 @@ def main():
 					pos = pygame.mouse.get_pos()
 					if start_button.get_pos().collidepoint(pos):
 						pop_sound.play()
-						play.screen.fill((202, 228, 241))
+						play = Game.Run(screen, True)
+						play.screen.fill((194, 195, 199))
 						pygame.display.update()
 						play.main()
 					elif advanced_button.get_pos().collidepoint(pos):
@@ -55,6 +55,7 @@ def main():
 						metvcl.main()
 					elif example_button.get_pos().collidepoint(pos):
 						pop_sound.play()
+						play = Game.Run(screen, False)
 						example = Example.Variant(screen)
 						example.main()
 					else:
