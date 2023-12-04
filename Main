@@ -45,17 +45,17 @@ def main():
 					pos = pygame.mouse.get_pos()
 					if start_button.get_pos().collidepoint(pos):
 						pop_sound.play()
-						play = Game.Run(screen, True)
+						play = Game.Run(screen, False)
 						play.screen.fill((194, 195, 199))
 						pygame.display.update()
 						play.main()
 					elif advanced_button.get_pos().collidepoint(pos):
 						pop_sound.play()
-						metvcl = Advanced.Advanced(screen)
-						metvcl.main()
+						new_game = Advanced.Advanced(screen)
+						new_game.main()
 					elif example_button.get_pos().collidepoint(pos):
 						pop_sound.play()
-						play = Game.Run(screen, False)
+						play = Game.Run(screen, True)
 						example = Example.Variant(screen)
 						example.main()
 					else:
