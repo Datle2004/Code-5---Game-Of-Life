@@ -23,6 +23,7 @@ def main():
 	example_button = Start.Button(example_text,800,600,10)
 	#sound
 	pop_sound = pygame.mixer.Sound('pop_sound.mp3')
+	pop_sound.set_volume(0.2)
 	music = pygame.mixer.Sound('music.mp3')
 	music.play(-1)
 	#game loop
