@@ -34,6 +34,7 @@ class Variant:
     def main(self):
         self.screen.fill((202, 228, 241))
         pop_sound = pygame.mixer.Sound('pop_sound.mp3')
+        pop_sound.set_volume(0.2)
         back_button = pygame.Rect(525,600,150,50)
         grid = [[0]*100 for i in range(100)]
         V1_pos = self.draw("Variant 1",112.5)
