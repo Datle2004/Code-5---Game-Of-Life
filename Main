@@ -3,8 +3,9 @@ import Start
 import Game
 import Advanced
 import Example
-import vd
+
 pygame.init()
+pygame.mixer.init()
 #create display window
 SCREEN_HEIGHT = 800
 SCREEN_WIDTH = 1200
@@ -20,6 +21,10 @@ def main():
 	start_button = Start.Button(start_text,450,600,10)
 	advanced_button = Start.Button(advanced_text,100,600,10)
 	example_button = Start.Button(example_text,800,600,10)
+	#sound
+	pop_sound = pygame.mixer.Sound('pop_sound.mp3')
+	music = pygame.mixer.Sound('music.mp3')
+	music.play(-1)
 	#game loop
 	run = True
 	play = Game.Run(screen)
@@ -39,13 +44,16 @@ def main():
 			elif event.type == pygame.MOUSEBUTTONDOWN:
 					pos = pygame.mouse.get_pos()
 					if start_button.get_pos().collidepoint(pos):
+						pop_sound.play()
 						play.screen.fill((202, 228, 241))
 						pygame.display.update()
 						play.main()
 					elif advanced_button.get_pos().collidepoint(pos):
+						pop_sound.play()
 						metvcl = Advanced.Advanced(screen)
 						metvcl.main()
 					elif example_button.get_pos().collidepoint(pos):
+						pop_sound.play()
 						example = Example.Variant(screen)
 						example.main()
 					else:
