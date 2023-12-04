@@ -2,9 +2,6 @@ import pygame
 import sys
 import Main
 import Game
-import numpy as np 
-import vd
-
 pygame.init()
 pygame.font.init()
 
@@ -12,18 +9,19 @@ class Variant:
     def __init__(self, screen):
         self.screen = screen
         self.cell_size = 300
-        self.font = pygame.font.Font('freesansbold.ttf', 30)
+        self.font = pygame.font.Font('freesansbold.ttf', 50)
     
     def draw(self, text, i):
-        pygame.draw.rect(self.screen, (192, 192, 192), (i, 300, 150, 50), 0, 5)
-        pygame.draw.rect(self.screen, 'dark grey', (i, 300, 150, 50), 3, 5) 
+        pygame.draw.rect(self.screen, (192, 192, 192), (i, 300, 250, 100), 0, 5)
+        pygame.draw.rect(self.screen, 'dark grey', (i, 300, 250, 100), 3, 5) 
         text_surface = self.font.render(text, True, 'white')
-        self.screen.blit(text_surface, (i + 5, 300 + 10))
-        return pygame.Rect(i, 300, 150, 50)
+        self.screen.blit(text_surface, (i + (250 - text_surface.get_width()) // 2, 300 + (100 - text_surface.get_height()) // 2))
+        return pygame.Rect(i, 300, 250, 100)
     
     def draw_back_button(self, back_button):
         pygame.draw.rect(self.screen, (192, 192, 192), back_button, 0, 5)
         pygame.draw.rect(self.screen, 'dark grey', back_button, 3, 5)
+        self.font = pygame.font.Font('freesansbold.ttf', 30)
         text = self.font.render('Back', True, 'black')
         text_w = text.get_width()
         self.screen.blit(text, ((150-text_w)//2 + back_button.x, back_button.y + 10))
@@ -35,17 +33,20 @@ class Variant:
         return grid 
     def main(self):
         self.screen.fill((202, 228, 241))
+        pop_sound = pygame.mixer.Sound('pop_sound.mp3')
         back_button = pygame.Rect(525,600,150,50)
         grid = [[0]*100 for i in range(100)]
-        V1_pos = self.draw("Variant 1",75)
+        V1_pos = self.draw("Variant 1",112.5)
         v1 ="........OO...,.......OO....,.........O...,...........OO,..........O..,.............,.........O..O,.OO.....OO...,OO.....O.....,..O....O.O...,....OO..O....,....OO.......,........O....,.......O.O...,........O...."
         v1 = v1.split(",")
         grid1 = [[0]*len(v1[0]) for i in range(len(v1))]
         grid1 = self.update_grid(grid1,v1)
-        V2_pos = self.draw('Variant 2', 300)
-        V3_pos = self.draw('Variant 3', 525)
-        V4_pos = self.draw('Variant 4', 750)
-        V5_pos = self.draw('Variant 5', 975)
+        V2_pos = self.draw('Variant 2', 475)
+        V3_pos = self.draw('Variant 3', 837.5)
+        v3 = ".OO........................,.OO........................,...........................,...............OO..........,OO.............O.O.........,OO...............O.........,...............OOO.....O...,.......................OOO.,..........................O,.......................OOO.,...............OOO.....O...,OO...............O.........,OO.............O.O.........,...............OO..........,...........................,.OO........................,.OO........................"
+        v3 = v3.split(",")
+        grid3 = [[0]*len(v3[0]) for i in range(len(v3))]
+        grid3 = self.update_grid(grid3,v3)
         a = Game.Run(self.screen)
         running = True
         while running:
@@ -56,6 +57,7 @@ class Variant:
                     if back_button.collidepoint(event.pos):
                         Main.main()
                     elif V1_pos.collidepoint(event.pos):
+                        pop_sound.play()
                         a.screen.fill((202, 228, 241))
                         for i in range(len(grid1)):
                             for j in range(len(grid1[0])):
@@ -68,6 +70,7 @@ class Variant:
                         
                         
                     elif V2_pos.collidepoint(event.pos):
+                        pop_sound.play()
                         a.screen.fill((202, 228, 241))
                         for i in range(9):
                             for j in range(12):
@@ -80,15 +83,18 @@ class Variant:
                         a.cell_size = 600 // max(a.rows,a.cols)
                         a.main()
                     elif V3_pos.collidepoint(event.pos):
-                        pass
-                    elif V4_pos.collidepoint(event.pos):
-                        pass
-                    elif V5_pos.collidepoint(event.pos):
-                        pass
+                        pop_sound.play()
+                        a.screen.fill((202, 228, 241))
+                        for i in range(len(grid3)):
+                            for j in range(len(grid3[0])):
+                                grid[i+50][j+50] = grid3[i][j]
+                        a.grid = grid
+                        a.rows = len(a.grid)
+                        a.cols = len(a.grid[0])
+                        a.cell_size = 600 // max(a.rows,a.cols)
+                        a.main()
+                   
             self.draw_back_button(back_button)
-
-    
-            
             pygame.display.update()
         pygame.quit()
         sys.exit()
