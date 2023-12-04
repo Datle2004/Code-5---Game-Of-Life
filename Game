@@ -155,6 +155,7 @@ class Run:
 
     # Main function
     def main(self):
+        pop_sound = pygame.mixer.Sound('pop_sound.mp3')
         rows_pos = self.draw_input(f"Rows: {self.rows}",50)
         cols_pos = self.draw_input(f"Cols: {self.cols}",125)
         live_cell_pos = self.draw_input(f"Live Cell: 2 3",200)
@@ -212,11 +213,13 @@ class Run:
                             self.speed = self.input_screen("Speed: ",700,350,True,True)
                             self.COUNT = 0
                         elif self.reset_button.collidepoint(event.pos):
+                            pop_sound.play()
                             self.grid = [[0] * self.cols for _ in range(self.rows)]
                             start = False
                             self.COUNT = 0
                             self.draw_generation(False)
                         elif pygame.Rect((0,0,self.cols*self.cell_size,self.rows*self.cell_size)).collidepoint(event.pos):
+                            pop_sound.play()
                             self.update_grid(pygame.mouse.get_pos())
                             pause = True
                             start = False
@@ -227,6 +230,7 @@ class Run:
                         else:
                             pass
                     else:
+                        pop_sound.play()
                         pause = not pause
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
