@@ -11,9 +11,9 @@ class Button():
 		self.distance = distance
 	def draw(self, surface):
 		#draw button on screen
-		pygame.draw.rect(surface,'black',(self.x,self.y,300,100))
-		pygame.draw.rect(surface,self.white,(self.x+self.distance,self.y+self.distance,300-2*self.distance,100-2*self.distance))
-		pygame.draw.rect(surface,(95, 87, 79),(self.x + 2*self.distance,self.y + 2*self.distance,300 - 4*self.distance,100-4*self.distance))
-		surface.blit(self.content,(self.x + (300 - self.content.get_width())//2,self.y+3*self.distance + 2))
+		pygame.draw.rect(surface, 'black',(self.x, self.y, 300, 100))
+		pygame.draw.rect(surface, self.white, (self.x + self.distance, self.y + self.distance,300 - 2 * self.distance,100 - 2 * self.distance))
+		pygame.draw.rect(surface, (95, 87, 79), (self.x + 2 * self.distance, self.y + 2 * self.distance,300 - 4 * self.distance,100 - 4 * self.distance))
+		surface.blit(self.content,(self.x + (300 - self.content.get_width())//2,self.y + 3 * self.distance + 2))
 	def get_pos(self):
-		return pygame.Rect(self.x,self.y,300,100)
+		return pygame.Rect(self.x, self.y, 300, 100)
