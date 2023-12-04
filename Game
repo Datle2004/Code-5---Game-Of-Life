@@ -141,18 +141,16 @@ class Run:
         text_w, text_h = text.get_size()
         self.screen.blit(text, ((150-text_w) // 2 + self.back_button.x, self.back_button.y + (50 - text_h) // 2))
 
-
     def draw_generation(self,check):
         if check:
             self.COUNT +=1
-
         text = self.font.render(f"Generation: {self.COUNT}", True, 'white')
         text_w, text_h = text.get_size()
         pygame.draw.rect(self.screen,(95, 87, 79) , (95, 700, 275, 50), 0, 5)
         pygame.draw.rect(self.screen, 'black', (95, 700, 275, 50), 3, 5)
         self.screen.blit(text,(95 + (275 - text_w) // 2, 700 + (50 - text_h) // 2))
 
-    # Main function
+  
     def main(self):
         pop_sound = pygame.mixer.Sound('pop_sound.mp3')
         pop_sound.set_volume(0.2)
@@ -164,7 +162,7 @@ class Run:
         dead_cell_pos = self.draw_input(f"Dead Cell: 3", 275)
         speed_pos = self.draw_input(f"Speed: {self.speed}", 350)
     
-        # Main loop
+      
         running = True
         pause = False
         start = False
@@ -179,33 +177,33 @@ class Run:
                     if not self.button_rect.collidepoint(event.pos): 
                         if rows_pos.collidepoint(event.pos):
                             pop_sound.play()
-                            self.rows = self.input_screen("Rows: ",700,50,True,True)
+                            self.rows = self.input_screen("Rows: ", 700, 50, True, True)
                             self.cell_size = 600 // max(self.rows,self.cols)
-                            pygame.draw.rect(self.screen,(194, 195, 199),(0,0,602,602))
+                            pygame.draw.rect(self.screen,(194, 195, 199), (0, 0, 602, 602))
                             self.grid = [[0] * self.cols for _ in range(self.rows)]
                             self.COUNT = 0
                             check = False
                         elif cols_pos.collidepoint(event.pos):
                             pop_sound.play()
-                            self.cols = self.input_screen("Cols: ",700,125,True,True)
-                            self.cell_size = 600 // max(self.rows,self.cols)
-                            pygame.draw.rect(self.screen,(194, 195, 199),(0,0,602,602))
+                            self.cols = self.input_screen("Cols: ", 700, 125, True, True)
+                            self.cell_size = 600 // max(self.rows, self.cols)
+                            pygame.draw.rect(self.screen,(194, 195, 199),(0, 0, 602, 602))
                             self.grid = [[0] * self.cols for _ in range(self.rows)]
                             self.COUNT = 0 
                             check = False
                         elif live_cell_pos.collidepoint(event.pos):
                             pop_sound.play()
-                            self.live_cell = self.input_screen("Live Cell: ",700,200,False,True)
+                            self.live_cell = self.input_screen("Live Cell: ",700, 200, False, True)
                             check = False
                             self.COUNT = 0
                         elif dead_cell_pos.collidepoint(event.pos):
                             pop_sound.play()
-                            self.dead_cell = self.input_screen("Dead Cell: ",700,275,False,True)
+                            self.dead_cell = self.input_screen("Dead Cell: ", 700, 275, False, True)
                             check = False
                             self.COUNT = 0
                         elif speed_pos.collidepoint(event.pos):
                             pop_sound.play()
-                            self.speed = self.input_screen("Speed: ",700,350,True,True)
+                            self.speed = self.input_screen("Speed: ", 700, 350, True, True)
                         elif self.reset_button.collidepoint(event.pos):
                             pop_sound.play()
                             if self.example == False:
@@ -256,16 +254,13 @@ class Run:
                 check = False
             else:
                 check = True
-            # Draw the grid and cells
+           
             self.draw_grid()
             self.draw_cells()
-
-            #draw button
-            
             self.draw_pause_button(pause,start)
             self.draw_reset_button()
             self.draw_back_button()
-            # Update the display
+            
             pygame.display.update()
             
 
