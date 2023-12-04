@@ -156,6 +156,7 @@ class Run:
     # Main function
     def main(self):
         pop_sound = pygame.mixer.Sound('pop_sound.mp3')
+        pop_sound.set_volume(0.2)
         rows_pos = self.draw_input(f"Rows: {self.rows}",50)
         cols_pos = self.draw_input(f"Cols: {self.cols}",125)
         live_cell_pos = self.draw_input(f"Live Cell: 2 3",200)
