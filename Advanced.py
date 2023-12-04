@@ -38,7 +38,7 @@ class Advanced():
     def update_middle_direction(self):
         x1,y1 = self.start
         x2,y2 = self.end
-        if self.d[0]*(x2 - x1) > self.d[1]*(y2 - y1):
+        if self.d[0] * (x2 - x1) > self.d[1] * (y2 - y1):
             self.m[0] = self.d[0]
             self.m[1] = -1 * self.d[1]
         elif self.d[0]*(x2 - x1) < self.d[1]*(y2 - y1):
@@ -50,32 +50,33 @@ class Advanced():
     def update_start_grid(self,start,d):
         #direction
         i,j = start 
-        self.create.grid[i+d[0]][j+d[1]] = 1
-        self.create.grid[i][j+d[1]] = 1
-        self.create.grid[i+d[0]][j] = 1
-        self.create.grid[i-d[1]][j+d[0]] = 1
-        if d[0]*d[1] > 0:
-            self.create.grid[i][j-d[1]] = 1
+        self.create.grid[i + d[0]][j + d[1]] = 1
+        self.create.grid[i][j + d[1]] = 1
+        self.create.grid[i + d[0]][j] = 1
+        self.create.grid[i - d[1]][j + d[0]] = 1
+        if d[0] * d[1] > 0:
+            self.create.grid[i][j - d[1]] = 1
         else:
-            self.create.grid[i-d[0]][j] = 1
+            self.create.grid[i - d[0]][j] = 1
     def finish(self,d):
         i,j = self.end
-        self.create.grid[i+1][j] = 1
+        self.create.grid[i + 1][j] = 1
         self.create.grid[i-1][j] = 1
-        self.create.grid[i][j+1] = 1
-        self.create.grid[i][j-1] = 1
-        self.create.grid[i+d[0]][j+d[1]] = 1
+        self.create.grid[i][j + 1] = 1
+        self.create.grid[i][j - 1] = 1
+        self.create.grid[i + d[0]][j + d[1]] = 1
     def find_middle(self):
         x1,y1 = self.start
         x2,y2 = self.end
-        D = -1*self.d[0]*self.m[1] + self.d[1]*self.m[0]
-        Dx = -1 *(self.d[0]*x1 - self.d[1]*y1)*self.m[1] + self.d[1]*(self.m[0]*x2-self.m[1]*y2)
+        D = -1 * self.d[0] * self.m[1] + self.d[1] * self.m[0]
+        Dx = -1 *(self.d[0] * x1 - self.d[1]*y1)*self.m[1] + self.d[1]*(self.m[0]*x2-self.m[1]*y2)
         Dy = self.d[0]*(self.m[0]*x2 - self.m[1]*y2) - self.m[0]*(self.d[0]*x1-self.d[1]*y1)
         return [Dx//D,Dy//D]
         
 
     def move_pos(self,text,i):
         return self.create.draw_input(text,i)
+    
     def main(self):
         pop_sound = pygame.mixer.Sound('pop_sound.mp3')
         pop_sound.set_volume(0.2)
