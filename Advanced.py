@@ -5,11 +5,11 @@ pygame.init()
 class Advanced():
     def __init__(self,screen):
         self.screen = screen
-        self.create = Game.Run(screen)
+        self.create = Game.Run(screen, False)
         self.create.cell_size = 6
         self.create.rows = 100
         self.create.cols = 100
-        self.start = [0,0]
+        self.start = [1,1]
         self.end = [99,99]
         self.middle = [0,0]
         self.create.grid = [[0]*100 for i in range(100)]
@@ -77,9 +77,11 @@ class Advanced():
     def move_pos(self,text,i):
         return self.create.draw_input(text,i)
     def main(self):
+        pop_sound = pygame.mixer.Sound('pop_sound.mp3')
+        pop_sound.set_volume(0.2)
         self.screen.fill((202, 228, 241))
-        start_pos = self.move_pos(f"Start: {self.start}",100)
-        end_pos = self.move_pos(f"End: {self.end}",200)
+        start_pos = self.move_pos("Start: 1 1",100)
+        end_pos = self.move_pos("End: 99 99",200)
         run = True
         pause = False
         start = False
@@ -92,12 +94,15 @@ class Advanced():
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if not self.create.button_rect.collidepoint(event.pos): 
                         if start_pos.collidepoint(event.pos):
-                            self.start = self.create.input_screen("Start: ",700,100,False)
+                            pop_sound.play()
+                            self.start = self.create.input_screen("Start: ",700,100,False, True)
                             self.create.COUNT = 0
                         elif end_pos.collidepoint(event.pos):
-                            self.end = self.create.input_screen("End: ",700,200,False)
+                            pop_sound.play()
+                            self.end = self.create.input_screen("End: ",700,200,False, True)
                             self.create.COUNT = 0
                         elif self.create.reset_button.collidepoint(event.pos):
+                            pop_sound.play()
                             self.create.grid = [[0]*100 for i in range(100)]
                             start = False
                             self.create.COUNT = 0
@@ -105,6 +110,7 @@ class Advanced():
                         elif pygame.Rect((0,0,600,600)).collidepoint(event.pos):
                             pass
                         elif self.create.back_button.collidepoint(event.pos):
+                            pop_sound.play()
                             Main.main()
                         else:
                             pass
