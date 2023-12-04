@@ -14,12 +14,12 @@ def main():
 	pygame.display.set_caption("Conway's Game Of Life")
 	background = pygame.transform.scale(pygame.image.load('conway.png').convert_alpha(), (SCREEN_WIDTH, SCREEN_HEIGHT))
 	font_text = pygame.font.Font('PXL3278.ttf',45)
-	start_text = font_text.render("Start",True,'white')
-	advanced_text = font_text.render("Advanced",True,'white')
-	example_text = font_text.render("Example",True,'white')
-	start_button = Start.Button(start_text,450,530,10)
-	advanced_button = Start.Button(advanced_text,100,530,10)
-	example_button = Start.Button(example_text,800,530,10)
+	start_text = font_text.render("Start", True, 'white')
+	advanced_text = font_text.render("Advanced", True, 'white')
+	example_text = font_text.render("Example", True, 'white')
+	start_button = Start.Button(start_text, 450, 530, 10)
+	advanced_button = Start.Button(advanced_text, 100, 530, 10)
+	example_button = Start.Button(example_text, 800, 530, 10)
 	#sound
 	pop_sound = pygame.mixer.Sound('pop_sound.mp3')
 	pop_sound.set_volume(0.2)
@@ -30,7 +30,7 @@ def main():
 	
 	while run:
 
-		screen.blit(background,(0,0))
+		screen.blit(background, (0,0))
 		start_button.draw(screen)
 		advanced_button.draw(screen)
 		example_button.draw(screen)
