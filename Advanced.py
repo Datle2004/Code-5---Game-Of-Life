@@ -15,6 +15,7 @@ class Advanced():
         self.create.grid = [[0]*100 for i in range(100)]
         self.d = [0,0]
         self.m = [0,0]
+        self.font = pygame.font.SysFont('Times New Roman', 30)
     def update_direction(self,start,end):
         x1,y1 = start
         x2,y2 = end
@@ -77,10 +78,15 @@ class Advanced():
     def move_pos(self,text,i):
         return self.create.draw_input(text,i)
     
+    def range_cell(self,condition):
+        for i in condition:
+            if i <= 0 or i >= 100:
+                return False
+        return True
     def main(self):
         pop_sound = pygame.mixer.Sound('pop_sound.mp3')
         pop_sound.set_volume(0.2)
-        self.screen.fill((202, 228, 241))
+        self.screen.fill((194, 195, 199))
         start_pos = self.move_pos("Start: 1 1",100)
         end_pos = self.move_pos("End: 99 99",200)
         run = True
@@ -131,12 +137,18 @@ class Advanced():
                         start = True
                         pause = False
 
-            # Draw the grid and cells
+            if self.range_cell(self.start) == False or self.range_cell(self.end) == False:
+                pygame.draw.rect(self.screen, (95, 87, 79), (700, 450, 350, 50), 0, 5)
+                pygame.draw.rect(self.screen, 'black', (700, 450, 350, 50), 3, 5)
+                text_surface = self.font.render('Type number from 1 to 99 !', True, 'white')
+                self.screen.blit(text_surface, (700 + 5, 450 + (50 - text_surface.get_height()) // 2))
+            else:
+                pygame.draw.rect(self.screen,(194, 195, 199),(700, 450, 350, 50))
             self.create.draw_grid()
             self.create.draw_cells()
             pygame.draw.rect(self.screen,"yellow",(self.start[1]*self.create.cell_size +2, self.start[0]*self.create.cell_size + 2,self.create.cell_size - 2,self.create.cell_size - 2))
             pygame.draw.rect(self.screen,"red",(self.end[1]*self.create.cell_size +2, self.end[0]*self.create.cell_size + 2,self.create.cell_size - 2,self.create.cell_size - 2))
-            #draw button
+            
             self.create.draw_pause_button(pause,start)
             self.create.draw_reset_button()
             self.create.draw_back_button()
